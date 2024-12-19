@@ -798,35 +798,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function mintNFT(metadataURI) {
         try {
-    
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = provider.getSigner();
-            const address = await signer.getAddress();
-            const contract = new ethers.Contract(contractAddress, contractABI, signer);
-
-
-            const tx = await contract.mintxNFT(address, 1, metadataURI);
-            showPleaseWait(); // Show the "please wait" message
-
-            console.log("Transaction sent:", tx.hash);
-    
-            const receipt = await tx.wait();
-            const event = receipt.events.find((e) => e.event === "xNFTMinted");
-            const tokenId = event.args.tokenId.toNumber();
-            console.log("Mint successful! Token ID:", tokenId);
-    
-            alert(`xNFT minted successfully! Token ID: ${tokenId}`);
-        } catch (error) {
-            console.error("Error minting xNFT:", error);
-            alert("Failed to mint xNFT. Check the console for details.");
-        } finally {
-            hidePleaseWait(); // Hide the "please wait" message after completion or error
-        }
-    }
-    
-
-    async function mintNFT(metadataURI) {
-        try {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             const address = await signer.getAddress();
@@ -855,6 +826,67 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
     
+    
+
+    async function fetchTweetDetails(url) {
+        try {
+            // Instead of showing a progress bar, show "Please wait..."
+            message.textContent = "Please wait...";
+
+            console.log("Fetching tweet details for URL:", url);
+
+            const response = await fetch(`/api/get-tweet-details?tweetId=${encodeURIComponent(url)}`);
+            if (!response.ok) {
+                throw new Error(`Error fetching tweet details: ${response.statusText}`);
+            }
+
+            const { time, message: tweetMessage, username } = await response.json();
+            console.log("Fetched Tweet Details:", { time, message: tweetMessage, username });
+
+            const data = {
+                time,
+                message: tweetMessage,
+                username,
+                tokenId: Date.now(),
+            };
+
+            const gifResponse = await fetch("/api/create-gif", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            });
+
+            if (!gifResponse.ok) {
+                throw new Error(`Error creating GIF: ${gifResponse.statusText}`);
+            }
+
+            const gifResult = await gifResponse.json();
+            console.log("GIF Created:", gifResult);
+
+            // After GIF is created, if showGIF is true, display the GIF
+            if (showGIF && gifResult.gifURI) {
+                gifDisplay.src = gifResult.gifURI.replace("ipfs://", "https://gateway.pinata.cloud/ipfs/");
+                gifDisplay.style.display = "block";
+            }
+
+            message.textContent = "Ready to mint xNFT!";
+
+            if (gifResult.success && mintButton) {
+                mintButton.style.display = "inline-block";
+                mintButton.onclick = () => {
+                    const metadataURI = gifResult.metadataURI;
+                    mintNFT(metadataURI);
+                };
+            } else {
+                console.error("Mint button not found or GIF creation failed.");
+            }
+        } catch (error) {
+            console.error("Error fetching tweet details or creating GIF:", error);
+            if (message) {
+                message.textContent = `Error: ${error.message}`;
+            }
+        }
+    }
 
     tweetForm.addEventListener("submit", (event) => {
         event.preventDefault();
