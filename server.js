@@ -11,7 +11,7 @@ const { execSync } = require("child_process");
 const app = express();
 
 // Configurable Test Mode
-const testMode = false; // Set to true for mock tweet data
+const testMode = true; // Set to true for mock tweet data
 
 // Environment variables for API keys
 const PINATA_API_KEY = process.env.PINATA_API_KEY;
@@ -45,7 +45,7 @@ app.get("/api/get-tweet-details", async (req, res) => {
         const currentZuluTime = new Date().toISOString();
         return res.json({
             time: currentZuluTime,
-            message: "Mock tweet 223 message for testing duplicate sentence for format testing.",
+            message: "Episode 1 of Sarcastic History of the World: Democracy https://t.co/tiYvO6v.",
             username: "testUsername",
         });
     }
