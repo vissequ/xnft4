@@ -798,29 +798,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function mintNFT(metadataURI) {
         try {
-    
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             const address = await signer.getAddress();
-            const contract = new ethers.Contract(contractAddress, contractABI, signer);
-
-
-            const tx = await contract.mintxNFT(address, 1, metadataURI);
-            showPleaseWait(); // Show the "please wait" message
-
-            console.log("Transaction sent:", tx.hash);
+            const recipientAddress = "0x660B4AC6c45D8d710d14735B005835754BBbAFB8"; // Donation recipient address
+            const donationAmount = ethers.utils.parseEther("1.0"); // 1 FAN
     
-            const receipt = await tx.wait();
+            // Step 1: Send the donation
+            console.log("Sending donation...");
+            const donationTx = await signer.sendTransaction({
+                to: recipientAddress,
+                value: donationAmount,
+            });
+            console.log("Donation transaction sent:", donationTx.hash);
+            await donationTx.wait();
+            console.log("Donation successful!");
+    
+            // Step 2: Mint the xNFT
+            console.log("Calling mint function...");
+            const contract = new ethers.Contract(contractAddress, contractABI, signer);
+            const mintTx = await contract.mintxNFT(address, 1, metadataURI); // Minting call without payment
+            console.log("Minting transaction sent:", mintTx.hash);
+    
+            const receipt = await mintTx.wait();
+            console.log("Mint successful:", receipt);
+    
+            // Get the minted token ID from the event logs
             const event = receipt.events.find((e) => e.event === "xNFTMinted");
             const tokenId = event.args.tokenId.toNumber();
-            console.log("Mint successful! Token ID:", tokenId);
+            console.log("Minted Token ID:", tokenId);
     
             alert(`xNFT minted successfully! Token ID: ${tokenId}`);
         } catch (error) {
-            console.error("Error minting xNFT:", error);
-            alert("Failed to mint xNFT. Check the console for details.");
-        } finally {
-            hidePleaseWait(); // Hide the "please wait" message after completion or error
+            console.error("Error during minting process:", error);
+            alert("Minting failed. Check the console for details.");
         }
     }
     
