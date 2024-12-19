@@ -1,0 +1,8 @@
+{
+  "build": {
+    "dockerfilePath": "./Dockerfile"
+  },
+  "deploy": {
+    "image": "vissequ/xnft:latest"
+  }
+}

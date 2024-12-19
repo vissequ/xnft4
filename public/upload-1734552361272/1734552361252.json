@@ -1,0 +1,19 @@
+{
+  "name": "xNFT #1734552361252",
+  "description": "Visit xNFT.pw to immortalize any post on X by turning it into an NFT!",
+  "image": "ipfs://QmP7s8KXBvUuM3Rb9kYjtVQFk3jJKBTbSmN1ViXZyrJmBZ",
+  "attributes": [
+    {
+      "trait_type": "Post Zulu Time",
+      "value": "2024-12-18T20:06:01.246Z"
+    },
+    {
+      "trait_type": "Post Message",
+      "value": "Mock tweet message for testing duplicate sentence for format testing."
+    },
+    {
+      "trait_type": "X Username",
+      "value": "testUsername"
+    }
+  ]
+}
