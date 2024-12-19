@@ -11,7 +11,7 @@ const { execSync } = require("child_process");
 const app = express();
 
 // Configurable Test Mode
-const testMode = true; // Set to true for mock tweet data
+const testMode = false; // Set to true for mock tweet data
 
 // Environment variables for API keys
 const PINATA_API_KEY = process.env.PINATA_API_KEY;
