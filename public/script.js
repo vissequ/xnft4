@@ -795,28 +795,22 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
     
+
     async function mintNFT(metadataURI) {
         try {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             const address = await signer.getAddress();
     
+            // Define the contract and minting fee
             const contract = new ethers.Contract(contractAddress, contractABI, signer);
             const mintingFee = ethers.utils.parseEther("1.0"); // 1 FAN
     
-            // Ensure gas estimation is logged
-            try {
-                const gasEstimate = await contract.estimateGas.mintxNFT(address, 1, metadataURI, { value: mintingFee });
-                console.log("Estimated gas:", gasEstimate.toString());
-            } catch (error) {
-                console.error("Gas estimation failed:", error);
-            }
-    
-            // Call the minting function with value
+            // Call the minting function
             const tx = await contract.mintxNFT(address, 1, metadataURI, { value: mintingFee });
-            console.log("Transaction sent:", tx.hash);
-    
             showPleaseWait(); // Show the "please wait" message
+    
+            console.log("Transaction sent:", tx.hash);
     
             const receipt = await tx.wait();
             const event = receipt.events.find((e) => e.event === "xNFTMinted");
