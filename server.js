@@ -148,20 +148,43 @@ app.post("/api/create-gif", async (req, res) => {
         if (!fs.existsSync(templateGifPath)) {
             throw new Error(`Template GIF not found at ${templateGifPath}`);
         }
-
-        // Function to break the message into lines
         function formatMessage(text) {
             const words = text.split(' ');
-            const lines = [];
-            for (let i = 0; i < words.length; i += 5) {
-                lines.push(words.slice(i, i + 5).join(' '));
-            }
-            return lines.join('\n');
-        }
+            const formattedLines = [];
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
         
-        // function formatMessage(text) {
-        //     return "Static test message\nwith multiple lines.";
-        // }
+            let currentLine = "";
+        
+            for (let i = 0; i < words.length; i++) {
+                const word = words[i];
+        
+                if (urlRegex.test(word)) {
+                    // If a URL is detected, push the current line, then the URL, then reset the current line
+                    if (currentLine.trim() !== "") {
+                        formattedLines.push(currentLine.trim());
+                    }
+                    formattedLines.push(word); // Add the URL as its own line
+                    currentLine = ""; // Reset the current line
+                } else {
+                    // Otherwise, add the word to the current line
+                    if (currentLine.split(' ').length >= 5) {
+                        // If the line reaches 5 words, push it and reset
+                        formattedLines.push(currentLine.trim());
+                        currentLine = word;
+                    } else {
+                        currentLine += ` ${word}`;
+                    }
+                }
+            }
+        
+            // Add the remaining text if any
+            if (currentLine.trim() !== "") {
+                formattedLines.push(currentLine.trim());
+            }
+        
+            // Join lines with line breaks
+            return formattedLines.join('\n');
+        }
         
 
         // Format the message with line breaks
