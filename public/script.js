@@ -32,34 +32,33 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function switchToFantom() {
-        const polygonParams = {
-            chainId: "0x89", // Polygon mainnet chain ID
-            chainName: "Polygon Mainnet",
+        const fantomParams = {
+            chainId: "0xFA", // Fantom mainnet chain ID
+            chainName: "Fantom Opera",
             nativeCurrency: {
-                name: "Polygon",
-                symbol: "MATIC",
+                name: "Fantom",
+                symbol: "FTM",
                 decimals: 18,
             },
-            rpcUrls: ["https://polygon-rpc.com"], // Reliable public RPC endpoint
-            blockExplorerUrls: ["https://polygonscan.com/"], // Polygon block explorer
+            rpcUrls: ["https://rpc.ftm.tools"],
+            blockExplorerUrls: ["https://ftmscan.com/"],
         };
-    
+
         try {
             await ethereum.request({
                 method: "wallet_addEthereumChain",
-                params: [polygonParams],
+                params: [fantomParams],
             });
-            console.log("Switched to Polygon network.");
+            console.log("Switched to Fantom network.");
         } catch (error) {
-            console.error("Error switching to Polygon network:", error);
-            walletInfo.textContent = "Failed to switch to Polygon network.";
+            console.error("Error switching to Fantom network:", error);
+            walletInfo.textContent = "Failed to switch to Fantom network.";
         }
     }
-    
 
     connectWalletButton.addEventListener("click", connectWallet);
 
-    const contractAddress = "0x1e02856de4f6eab78ec1107bec380badc2e1bfd9";
+    const contractAddress = "0x6EadE53Cb72BA2DF6bd8D45652e199CfEAB02D1a";
     const contractABI = [
             {
                 "inputs": [],
