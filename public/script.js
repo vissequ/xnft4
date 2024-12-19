@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     connectWalletButton.addEventListener("click", connectWallet);
 
-    const contractAddress = "0x44190eE275Ba0531795E7D2CB76e11C09F344399";
+    const contractAddress = "0x6EadE53Cb72BA2DF6bd8D45652e199CfEAB02D1a";
     const contractABI = [
             {
                 "inputs": [],
@@ -798,18 +798,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function mintNFT(metadataURI) {
         try {
+    
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             const address = await signer.getAddress();
-    
-            // Define the contract and minting fee
             const contract = new ethers.Contract(contractAddress, contractABI, signer);
-            const mintingFee = ethers.utils.parseEther("1.0"); // 1 FAN
-    
-            // Call the minting function
-            const tx = await contract.mintxNFT(address, 1, metadataURI, { value: mintingFee });
+
+
+            const tx = await contract.mintxNFT(address, 1, metadataURI);
             showPleaseWait(); // Show the "please wait" message
-    
+
             console.log("Transaction sent:", tx.hash);
     
             const receipt = await tx.wait();
@@ -825,7 +823,6 @@ document.addEventListener("DOMContentLoaded", () => {
             hidePleaseWait(); // Hide the "please wait" message after completion or error
         }
     }
-    
     
 
     async function fetchTweetDetails(url) {
