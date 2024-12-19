@@ -795,30 +795,21 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
     
-
     async function mintNFT(metadataURI) {
         try {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             const address = await signer.getAddress();
-            const recipientAddress = "0x660B4AC6c45D8d710d14735B005835754BBbAFB8"; // Payment recipient
-            const mintingFee = ethers.utils.parseEther("1.0"); // 1 FAN
-        
-            // Step 1: Send the minting fee to the recipient
-            const paymentTx = await signer.sendTransaction({
-                to: recipientAddress,
-                value: mintingFee
-            });
-            console.log("Payment transaction sent:", paymentTx.hash);
-            await paymentTx.wait(); // Wait for payment transaction to be mined
-            console.log("Payment successful!");
     
-            // Step 2: Call the minting function on the contract
             const contract = new ethers.Contract(contractAddress, contractABI, signer);
-            const tx = await contract.mintxNFT(address, 1, metadataURI); // No `value` needed here
+            const mintingFee = ethers.utils.parseEther("1.0"); // 1 FAN
+    
+            // Call the minting function
+            const tx = await contract.mintxNFT(address, 1, metadataURI, { value: mintingFee });
+            console.log("Transaction sent:", tx.hash);
+    
             showPleaseWait(); // Show the "please wait" message
     
-            console.log("Minting transaction sent:", tx.hash);
             const receipt = await tx.wait();
             const event = receipt.events.find((e) => e.event === "xNFTMinted");
             const tokenId = event.args.tokenId.toNumber();
