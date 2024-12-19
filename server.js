@@ -150,18 +150,18 @@ app.post("/api/create-gif", async (req, res) => {
         }
 
         // Function to break the message into lines
-        // function formatMessage(text) {
-        //     const words = text.split(' ');
-        //     const lines = [];
-        //     for (let i = 0; i < words.length; i += 5) {
-        //         lines.push(words.slice(i, i + 5).join(' '));
-        //     }
-        //     return lines.join('\n');
-        // }
-        
         function formatMessage(text) {
-            return "Static test message\nwith multiple lines.";
+            const words = text.split(' ');
+            const lines = [];
+            for (let i = 0; i < words.length; i += 5) {
+                lines.push(words.slice(i, i + 5).join(' '));
+            }
+            return lines.join('\n');
         }
+        
+        // function formatMessage(text) {
+        //     return "Static test message\nwith multiple lines.";
+        // }
         
 
         // Format the message with line breaks
