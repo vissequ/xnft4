@@ -804,7 +804,15 @@ document.addEventListener("DOMContentLoaded", () => {
             const contract = new ethers.Contract(contractAddress, contractABI, signer);
             const mintingFee = ethers.utils.parseEther("1.0"); // 1 FAN
     
-            // Call the minting function
+            // Ensure gas estimation is logged
+            try {
+                const gasEstimate = await contract.estimateGas.mintxNFT(address, 1, metadataURI, { value: mintingFee });
+                console.log("Estimated gas:", gasEstimate.toString());
+            } catch (error) {
+                console.error("Gas estimation failed:", error);
+            }
+    
+            // Call the minting function with value
             const tx = await contract.mintxNFT(address, 1, metadataURI, { value: mintingFee });
             console.log("Transaction sent:", tx.hash);
     
@@ -823,6 +831,7 @@ document.addEventListener("DOMContentLoaded", () => {
             hidePleaseWait(); // Hide the "please wait" message after completion or error
         }
     }
+    
     
 
     async function fetchTweetDetails(url) {
