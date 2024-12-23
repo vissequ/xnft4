@@ -82,7 +82,7 @@ app.get("/api/get-tweet-details", async (req, res) => {
             username,
         });
     } catch (error) {
-        console.error("Error fetching tweet details:", error.response?.data || error.message);
+        console.error("Please try again in a few minutes. Error fetching tweet details:", error.response?.data || error.message);
         res.status(error.response?.status || 500).json({ error: "Failed to fetch tweet details." });
     }
 });
